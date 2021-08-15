@@ -39,9 +39,14 @@ func GetBuildData(c *fiber.Ctx) error {
 func NewBuildData(c *fiber.Ctx) error {
 	db := database.DBConn
 	var build BuildData
-	build.BuildName = "テストbuild"
-	build.GitRepo = "https://github.com/n-guitar/build-ops-container.git"
-	build.ImgTag = "build-ops-container:test"
+	// formデータをセット
+	buildname := c.FormValue("buildname")
+	gitrepo := c.FormValue("gitrepo")
+	imgtag := c.FormValue("imgtag")
+	build.BuildName = buildname
+	build.GitRepo = gitrepo
+	build.ImgTag = imgtag
+	// databaseへレコード追加
 	db.Create(&build)
 	return c.JSON(build)
 }
@@ -53,8 +58,8 @@ func DeleteBuildData(c *fiber.Ctx) error {
 	var build BuildData
 	db.First(&build, id)
 	if build.BuildName == "" {
-		return c.Status(500).SendString("No Duild Found with ID")
+		return c.Status(500).SendString("No Build Found with ID")
 	}
 	db.Delete(&build)
-	return c.SendString("Duild Seccessfully Deleted")
+	return c.SendString("Build Seccessfully Deleted")
 }

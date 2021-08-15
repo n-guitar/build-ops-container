@@ -32,10 +32,14 @@ func initDatabase() *gorm.DB {
 func setupRoutes(app *fiber.App) {
 	app.Get("/", topPage)
 
+	// database crud
 	app.Get("/api/v1/build", buildapi.GetBuildDataSet)
 	app.Get("/api/v1/build/:id", buildapi.GetBuildData)
 	app.Post("/api/v1/build", buildapi.NewBuildData)
 	app.Delete("/api/v1/build/:id", buildapi.DeleteBuildData)
+
+	// git cmd
+	app.Post("/api/v1/build/:id/gitclone", buildapi.GitCloneCmdAPi)
 }
 
 func main() {

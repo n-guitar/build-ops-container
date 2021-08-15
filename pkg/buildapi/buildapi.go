@@ -8,6 +8,7 @@ build用に利用するデータのdatabase操作を行う
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/n-guitar/build-ops-container/pkg/database"
+	"github.com/n-guitar/build-ops-container/pkg/gitcmd"
 	"gorm.io/gorm"
 )
 
@@ -19,6 +20,7 @@ type BuildData struct {
 	ImgTag    string `json:"img_tag"`
 }
 
+// ---- dbのcred操作 ----
 func GetBuildDataSet(c *fiber.Ctx) error {
 	db := database.DBConn
 	var dataset []BuildData
@@ -62,4 +64,18 @@ func DeleteBuildData(c *fiber.Ctx) error {
 	}
 	db.Delete(&build)
 	return c.SendString("Build Seccessfully Deleted")
+}
+
+// ---- git操作 ----
+func GitCloneCmdAPi(c *fiber.Ctx) error {
+	id := c.Params("id")
+	db := database.DBConn
+	var build BuildData
+	db.First(&build, id)
+	if build.BuildName == "" {
+		return c.Status(500).SendString("No Build Found with ID")
+	}
+
+	result := gitcmd.GitCloneCmd(build.GitRepo)
+	return c.SendString(result)
 }

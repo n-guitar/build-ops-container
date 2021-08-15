@@ -11,4 +11,5 @@ require (
 replace (
 	github.com/n-guitar/build-ops-container/pkg/buildapi => ./pkg/buildapi
 	github.com/n-guitar/build-ops-container/pkg/database => ./pkg/database
+	github.com/n-guitar/build-ops-container/pkg/gitcmd => ./pkg/gitcmd
 )

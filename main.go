@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/n-guitar/build-ops-container/pkg/buildapi"
 	"github.com/n-guitar/build-ops-container/pkg/database"
 	"gorm.io/driver/sqlite"
@@ -46,6 +47,13 @@ func main() {
 	fmt.Println("go builder")
 
 	app := fiber.New()
+	// Default config
+	// app.Use(cors.New())
+	// Or extend your config for customization
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "http://localhost:3000",
+		AllowHeaders: "Origin, Content-Type, Accept",
+	}))
 
 	db := initDatabase()
 
@@ -57,7 +65,7 @@ func main() {
 	// app.Get("/", topPage)
 	setupRoutes(app)
 
-	app.Listen(":3000")
+	app.Listen(":3009")
 
 	// Close
 	defer sqlDB.Close()
